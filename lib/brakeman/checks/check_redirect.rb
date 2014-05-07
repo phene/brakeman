@@ -19,6 +19,10 @@ class Brakeman::CheckRedirect < Brakeman::BaseCheck
       @model_find_calls.merge [:from, :group, :having, :joins, :lock, :order, :reorder, :select, :where]
     end
 
+    if @tracker.config[:rails_version] >= "4.0.0"
+      @model_find_calls.merge [:find_by, :find_by!, :take]
+    end
+
     @tracker.find_call(:target => false, :method => :redirect_to).each do |res|
       process_result res
     end
